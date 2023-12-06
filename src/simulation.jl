@@ -21,17 +21,17 @@ mutable struct SimulationEvents
   time::Month
   # Policy changes.
   "Policy sets where lapses occurred, along with the number of lapsed policies. Lapses occur at the middle of the month."
-  const lapses::Vector{Pair{PolicySet,Float64}}
+  lapses::Vector{Pair{PolicySet,Float64}}
   "Policy sets where deaths occurred, along with the number of deceased policy holders. Deaths occur at the middle of the month."
-  const deaths::Vector{Pair{PolicySet,Float64}}
+  deaths::Vector{Pair{PolicySet,Float64}}
   "Policies which expired at the beginning of the month."
-  const expirations::Vector{PolicySet}
+  expirations::Vector{PolicySet}
   "Amount resulting from expired or lapsed policies or for which the holder has died."
   claimed::Float64
   "Policies which started at the beginning of the month."
-  const starts::Vector{PolicySet}
+  starts::Vector{PolicySet}
   expenses::Float64
-  const account_changes::Vector{Pair{PolicySet,AccountChanges}}
+  account_changes::Vector{Pair{PolicySet,AccountChanges}}
 end
 
 SimulationEvents() = SimulationEvents(Month(0), Pair{PolicySet,Float64}[], Pair{PolicySet,Float64}[], PolicySet[], 0.0, PolicySet[], 0.0, Pair{PolicySet,AccountChanges}[])
@@ -59,11 +59,11 @@ timestep after that.
 See also: [`next!`](@ref)
 """
 mutable struct Simulation{M<:Model}
-  const model::M
+  model::M
   "Ongoing policies which haven't reached their term yet nor lapsed and whose holders haven't died."
-  const active_policies::Vector{PolicySet}
+  active_policies::Vector{PolicySet}
   "Policies which have yet to be started."
-  const inactive_policies::Vector{PolicySet}
+  inactive_policies::Vector{PolicySet}
   "Current simulation time, incremented after every simulation step."
   time::Month
 end
