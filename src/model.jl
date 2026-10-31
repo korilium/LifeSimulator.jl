@@ -71,9 +71,9 @@ abstract type TermLifeModel <: Model end
 """
 Term life insurance model replicating the functionality of lifelib's `basiclife` module.
 """
-@struct_hash_equal Base.@kwdef struct LifelibBasiclife{M<:MortalityModel,L<:LapseModel} <: TermLifeModel
-  mortality::M = TabularMortality()
-  lapse::L = TimeVaryingLapse(t::Month -> max(0.1 - 0.02 * (Dates.value(t) ÷ 12), 0.02))
+@struct_hash_equal Base.@kwdef struct LifelibBasiclife{L<:LapseModel} <: TermLifeModel
+  mortality = TabularMortality()
+  lapse= TimeVaryingLapse(t::Month -> max(0.1 - 0.02 * (Dates.value(t) ÷ 12), 0.02))
   load_premium_rate::Float64 = 0.50
   "One-time cost for new policies."
   acquisition_cost::Float64 = 300.0

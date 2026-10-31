@@ -19,6 +19,8 @@ where, by default, the form with `Policy` as third argument simply defaults to c
 """
 abstract type MortalityModel end
 
+
+
 """
     monthly_mortality_rate(model::MortalityModel, time::Month, policy::Policy)
     monthly_mortality_rate(model::MortalityModel, time::Month, age::Year)
@@ -53,11 +55,21 @@ struct ConstantMortality <: MortalityModel
   annual_mortality_rate::Float64
 end
 
+
 annual_mortality_rate(model::ConstantMortality, time::Month, age::Year) = model.annual_mortality_rate
 
-@struct_hash_equal Base.@kwdef struct TabularMortality <: MortalityModel
+Base.@kwdef struct TabularMortality <: MortalityModel
   rates::Matrix{Float64} = Matrix{Float64}(read_csv("mortality_table.csv")[:, 2:end])
 end
+
+using MortalityTables
+function ParametricMortality(age, λ = -log(0.999441703848),α = -log(0.999733441115)*log(1.101077536030), β = log(1.101077536030)) 
+  rate::Float64 = hazard(Makeham(λ, α, β),age)
+  return rate
+end 
+
+
+ParametricMortality(55)
 
 annual_mortality_rate(model::TabularMortality, time::Int, age::Int) = model.rates[age - 17, min(time, 5) + 1]
 annual_mortality_rate(model::TabularMortality, time::Month, age::Year) = annual_mortality_rate(model, Dates.value(time ÷ 12), Dates.value(age))
